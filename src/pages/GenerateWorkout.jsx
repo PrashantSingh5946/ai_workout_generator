@@ -1,6 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { Card } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { Card, Button, TextField, Box } from "@mui/material";
 import env from "react-dotenv";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Autocomplete from "@mui/material/Autocomplete";
+
+const muscle_groups = [
+  { name: "chest", scientific_name: "Pectoralis Major" },
+  { name: "back", scientific_name: "Latissimus Dorsi, Trapezius, Rhomboids" },
+  { name: "shoulders", scientific_name: "Deltoids" },
+  { name: "biceps", scientific_name: "Biceps Brachii" },
+  { name: "triceps", scientific_name: "Triceps Brachii" },
+  { name: "abdominals", scientific_name: "Rectus Abdominis, Obliques" },
+  { name: "lowerBack", scientific_name: "Erector Spinae" },
+  { name: "quadriceps", scientific_name: "Quadriceps" },
+  { name: "hamstrings", scientific_name: "Hamstrings" },
+  { name: "glutes", scientific_name: "Gluteus Maximus" },
+  { name: "calves", scientific_name: "Gastrocnemius, Soleus" },
+];
 
 function GenerateWorkout() {
   const [data, setData] = useState([]);
@@ -90,10 +110,125 @@ in the form of a json schema like this
     }
   }
 
+  const ageRef = useRef();
+  const heightRef = useRef();
+  const weightRef = useRef();
+
   useEffect(() => {}, [data]);
+
   return (
     <div>
-      <button onClick={fetchData}>GenerateWorkout</button>
+      {/* Form */}
+
+      <Card style={{ padding: "15px" }}>
+        <Box style={{ innerWidth: "60vw" }}>
+          <form>
+            <Box>
+              <TextField
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                required
+                id="outlined-required"
+                label="Age"
+                defaultValue="23"
+                style={{ margin: "20px" }}
+                inputRef={ageRef}
+              />
+
+              <TextField
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                required
+                id="outlined-required"
+                label="Weight"
+                defaultValue="23"
+                style={{ margin: "20px" }}
+              />
+
+              <TextField
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                required
+                id="outlined-required"
+                label="Height"
+                defaultValue="160"
+                style={{ margin: "20px" }}
+              />
+            </Box>
+
+            <Box>
+              <TextField
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                required
+                id="outlined-required"
+                label="Workout duration"
+                defaultValue="30"
+                style={{ margin: "20px" }}
+              />
+
+              <TextField
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                required
+                id="outlined-required"
+                label="Workouts per week"
+                defaultValue="3"
+                style={{ margin: "20px" }}
+              />
+
+              {/* <TextField
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                required
+                id="outlined-required"
+                label="No of Months"
+                defaultValue="1"
+                style={{ margin: "20px" }}
+              /> */}
+            </Box>
+
+            <Box>
+              <FormControl style={{ margin: "20px" }}>
+                <FormLabel id="demo-radio-buttons-group-label">
+                  Gender
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  defaultValue="female"
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Female"
+                  />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Box>
+
+            <Autocomplete
+              multiple
+              id="tags-standard"
+              options={muscle_groups}
+              getOptionLabel={(musclegroup) => musclegroup.name}
+              defaultValue={[muscle_groups[1]]}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label="Multiple values"
+                  placeholder="Favorites"
+                />
+              )}
+              style={{ marginBottom: "20px" }}
+            />
+          </form>
+        </Box>
+
+        <Button variant="contained" onClick={fetchData}>
+          Generate Workout
+        </Button>
+      </Card>
 
       {data.map((month) => (
         <div className="month-card">
