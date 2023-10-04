@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import WeekCard from "../components/WeekCard";
-import { Box, Card, Grid } from "@mui/material";
+import { Box, Card, Grid, Modal, Typography } from "@mui/material";
 import WorkoutCard from "../components/WorkoutCard";
+import Workout from "../components/Workout";
 
 let data = {
   Workout_Plan_Description:
@@ -263,20 +264,53 @@ let data = {
 };
 
 function Workouts() {
+  const [isOpenWorkoutModal, setIsOpenWorkoutModal] = useState(false);
+  const [currentWorkout, setCurrentWorkout] = useState(null);
+
+  const handleClose = () => {};
+
   return (
     <div>
+      <Modal
+        open={isOpenWorkoutModal}
+        onClose={handleClose}
+        onClick={() => {
+          setIsOpenWorkoutModal(false);
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box>
+          <Workout
+            data={
+              data.Months[0].plan_for_each_week_in_the_month.days[
+                currentWorkout
+              ]
+            }
+          />
+        </Box>
+      </Modal>
+
       <Grid container className={""} justify="center">
         {data.Months[0].plan_for_each_week_in_the_month.days.map(
-          (data, index) => {
+          (dayData, currentIndex) => {
+            console.log(currentIndex);
             return (
               <Grid item>
-                <Box sx={{ margin: 3 }}>
-                  <WorkoutCard
-                    data={data}
-                    index={index}
-                    key={index}
-                  ></WorkoutCard>
-                </Box>
+                <div
+                  onClick={() => {
+                    setCurrentWorkout(currentIndex);
+                    setIsOpenWorkoutModal(true);
+                  }}
+                >
+                  <Box sx={{ margin: 3 }}>
+                    <WorkoutCard
+                      data={dayData}
+                      index={currentIndex}
+                      key={currentIndex}
+                    ></WorkoutCard>
+                  </Box>
+                </div>
               </Grid>
             );
           }
