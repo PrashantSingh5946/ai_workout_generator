@@ -9,6 +9,7 @@ import {
   FETCH_DATA_SUCCESS,
 } from "./workoutActionTypes";
 
+import deepClone from "../../../utils/deepClone";
 //initial state
 const initialState = {
   isModalOpen: false,
@@ -43,7 +44,7 @@ const workoutReducer = (state = initialState, action) => {
     case FETCH_DATA_SUCCESS:
       return {
         ...state,
-        data: action.payload,
+        data: deepClone(action.payload),
         loading: false,
         error: null,
       };

@@ -97,12 +97,11 @@ in the form of a json schema like this
       console.log(response);
 
       data = await response.json();
+      console.log("Outputted data", data);
 
       response = JSON.parse(data.choices[0].text);
 
-      console.log("Outputted data", data);
-
-      sendRequestSuccessStatus(data);
+      sendRequestSuccessStatus(response);
     } catch (error) {
       console.log(error);
       sendRequestFailureStatus(error);
