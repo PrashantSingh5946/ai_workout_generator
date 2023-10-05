@@ -5,8 +5,20 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { Box } from "@mui/material";
+
+const bull = (
+  <Box
+    component="span"
+    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
+  >
+    •
+  </Box>
+);
 
 export default function ExcerciseCard({ data }) {
+  console.log(data);
+
   const [imgUrl, setImgUrl] = React.useState(null);
 
   React.useEffect(() => {
@@ -40,6 +52,16 @@ export default function ExcerciseCard({ data }) {
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {data.reps} Reps
+        </Typography>
+
+        <Typography variant="body2" color="text.secondary">
+          <h4 style={{ marginBottom: "5px" }}>Target Muscle groups</h4>
+
+          {data.target_muscle.split(",").map((muscle_group) => (
+            <>
+              {muscle_group} {bull}
+            </>
+          ))}
         </Typography>
       </CardContent>
       <CardActions></CardActions>

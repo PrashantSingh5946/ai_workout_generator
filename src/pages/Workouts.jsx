@@ -32,7 +32,6 @@ function Workouts({
           <Dialog
             disableAutoFocus // Let the user focus on elements outside the dialog
             style={{ position: "absolute", width: "100%", height: "100%" }} // This was the key point, reset the position of the dialog, so the user can interact with other elements
-            disableBackdropClick // Remove the backdrop click (just to be sure)
             open={isModalOpen}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"

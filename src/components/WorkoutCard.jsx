@@ -53,16 +53,17 @@ function WorkoutCard({ data, index }) {
           Workout {index + 1}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Target Muscle groups
+          <h4>Target Muscle groups</h4>
+          <div>
+            {muscle_groups.map((muscle_group) => (
+              <span>
+                {muscle_group} {bull}
+              </span>
+            ))}
+          </div>
         </Typography>
       </CardContent>
-      <CardActions>
-        {muscle_groups.map((muscle_group) => (
-          <span>
-            {muscle_group} {bull}
-          </span>
-        ))}
-      </CardActions>
+      <CardActions></CardActions>
     </Card>
   );
 }

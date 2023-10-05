@@ -148,7 +148,6 @@ in the form of a json schema like this
             //hideBackdrop // Disable the backdrop color/image
             disableAutoFocus // Let the user focus on elements outside the dialog
             style={{ position: "absolute", width: "100%", height: "100%" }}
-            disableBackdropClick // Remove the backdrop click (just to be sure)
             open={isWorkoutListModalOpen}
             onClose={(e) => {
               e.stopPropagation();
