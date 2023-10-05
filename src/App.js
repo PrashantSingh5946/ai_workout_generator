@@ -21,7 +21,7 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Welcome />} />
             <Route path="/generate_workout" element={<GenerateWorkout />} />
-            <Route path="/workouts" element={<Workouts />} />
+            {/* <Route path="/workouts" element={<Workouts />} /> */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

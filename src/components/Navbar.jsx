@@ -7,11 +7,7 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink } from "react-router-dom";
 
 import Logo from "../assets/logo.png";
@@ -19,7 +15,7 @@ import Logo from "../assets/logo.png";
 const pages = [
   { text: "Welcome", link: "/" },
   { text: "Generate Workout", link: "/generate_workout" },
-  { text: "Workouts", link: "/workouts" },
+  // { text: "Workouts", link: "/workouts" },
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
