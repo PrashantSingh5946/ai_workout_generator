@@ -9,11 +9,6 @@ import {
   FETCH_DATA_SUCCESS,
 } from "./workoutActionTypes";
 
-//action creators
-// export const fetchDataRequest = () => ({
-//   type: FETCH_DATA_REQUEST,
-// });
-
 //initial state
 const initialState = {
   isModalOpen: false,
@@ -24,6 +19,8 @@ const initialState = {
 };
 
 const workoutReducer = (state = initialState, action) => {
+  console.log("Action called", action);
+
   switch (action.type) {
     case CLOSE_WORKOUT_MODAL:
       return {
