@@ -17,6 +17,7 @@ import {
   fetchDataSuccess,
   fetchDataFailure,
 } from "../redux/reducers/workout/workoutActions";
+import Spinner from "../components/Spinner";
 
 function GenerateWorkout({
   isLoading,
@@ -24,23 +25,52 @@ function GenerateWorkout({
   sendRequestFailureStatus,
   sendRequestSuccessStatus,
 }) {
-  const [data, setData] = useState([]);
-  const fetchData = async () => {
+  //Local State data
+  const [selectedMuscleGroups, setSelectedMuscleGroups] =
+    useState(muscle_groups);
+  const [gender, setGender] = useState("female");
+
+  //Refs to store the formData
+  const ageRef = useRef();
+  const heightRef = useRef();
+  const weightRef = useRef();
+  const workoutDurationRef = useRef();
+  const workoutsNoRef = useRef();
+  const genderRef = useRef();
+  const muscleGroupsRef = useRef();
+
+  //Prepare the data for the submission
+  const submitData = () => {
+    let age = ageRef.current.value;
+    let height = heightRef.current.value;
+    let weight = weightRef.current.value;
+    let workoutDuration = workoutDurationRef.current.value;
+    let numberOfDaysToWorkOut = workoutsNoRef.current.value;
+    let muscle_groups_to_target_throughout_the_week = selectedMuscleGroups;
+
+    //Flatten the array
+    muscle_groups_to_target_throughout_the_week =
+      muscle_groups_to_target_throughout_the_week.map(
+        (muscleGroup) => muscleGroup.name
+      );
+
+    fetchData({
+      age,
+      height,
+      weight,
+      workoutDuration,
+      numberOfDaysToWorkOut,
+      gender,
+      muscle_groups_to_target_throughout_the_week,
+    });
+  };
+
+  const fetchData = async (formData) => {
     try {
       startRequest({ age: 13 });
-      let data = null;
       let TOKEN = env.OPEN_AI_TOKEN;
       let topic = `give me a weekwise fitness plan  with exercises for the following parameters
-{
-  "age": 19,
-  "weight": "70kg",
-  "height": "170cm",
-  "length_of_days_array": 6,
-  "preferred_duration": 30,
-  "gender": "female",
-  "muscle_groups_to_target": ["abs","legs","back"],
-  "plan_duration_length_in_months": 1
-}
+${JSON.stringify(formData)}
 
 in the form of a json schema like this
  {
@@ -93,14 +123,9 @@ in the form of a json schema like this
 
       console.log("Fetching request");
       let response = await request;
-
-      console.log(response);
-
-      data = await response.json();
+      let data = await response.json();
       console.log("Outputted data", data);
-
       response = JSON.parse(data.choices[0].text);
-
       sendRequestSuccessStatus(response);
     } catch (error) {
       console.log(error);
@@ -108,15 +133,9 @@ in the form of a json schema like this
     }
   };
 
-  const ageRef = useRef();
-  const heightRef = useRef();
-  const weightRef = useRef();
-
-  useEffect(() => {}, [data]);
-
   return (
     <>
-      {isLoading && <div>...</div>}
+      {isLoading && <Spinner />}
       {!isLoading && (
         <div>
           {/* Form */}
@@ -142,6 +161,7 @@ in the form of a json schema like this
                     label="Weight"
                     defaultValue="23"
                     style={{ margin: "20px" }}
+                    inputRef={weightRef}
                   />
 
                   <TextField
@@ -151,6 +171,7 @@ in the form of a json schema like this
                     label="Height"
                     defaultValue="160"
                     style={{ margin: "20px" }}
+                    inputRef={heightRef}
                   />
                 </Box>
 
@@ -162,6 +183,7 @@ in the form of a json schema like this
                     label="Workout duration"
                     defaultValue="30"
                     style={{ margin: "20px" }}
+                    inputRef={workoutDurationRef}
                   />
 
                   <TextField
@@ -171,6 +193,7 @@ in the form of a json schema like this
                     label="Workouts per week"
                     defaultValue="3"
                     style={{ margin: "20px" }}
+                    inputRef={workoutsNoRef}
                   />
 
                   {/* <TextField
@@ -192,6 +215,8 @@ in the form of a json schema like this
                       aria-labelledby="demo-radio-buttons-group-label"
                       defaultValue="female"
                       name="radio-buttons-group"
+                      ref={genderRef}
+                      onChange={(e, genderData) => setGender(genderData)}
                     >
                       <FormControlLabel
                         value="female"
@@ -209,16 +234,19 @@ in the form of a json schema like this
 
                 <Autocomplete
                   multiple
+                  limitTags={4}
                   id="tags-standard"
+                  onChange={(e, tags) => setSelectedMuscleGroups(tags)}
                   options={muscle_groups}
                   getOptionLabel={(musclegroup) => musclegroup.name}
-                  defaultValue={[muscle_groups[1]]}
+                  defaultValue={[]}
+                  ref={muscleGroupsRef}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="standard"
                       label="Multiple values"
-                      placeholder="Favorites"
+                      placeholder="Select the muscle groups you want to target"
                     />
                   )}
                   style={{ marginBottom: "20px" }}
@@ -226,27 +254,10 @@ in the form of a json schema like this
               </form>
             </Box>
 
-            <Button variant="contained" onClick={fetchData}>
+            <Button variant="contained" onClick={submitData}>
               Generate Workout
             </Button>
           </Card>
-
-          {data.map((month) => (
-            <div className="month-card">
-              <div className="week-card">
-                {month["plan_for_each_week_in_the_month"]["days"].map((day) => (
-                  <Card variant="outlined">
-                    {day["excercises"].map((excercise) => (
-                      <Card variant="outlined">
-                        <h3>{excercise.name}</h3> {excercise.reps} reps{" "}
-                        {excercise.sets} sets
-                      </Card>
-                    ))}
-                  </Card>
-                ))}
-              </div>
-            </div>
-          ))}
         </div>
       )}
     </>
