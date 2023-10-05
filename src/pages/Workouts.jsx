@@ -30,7 +30,6 @@ function Workouts({
       {data && (
         <div>
           <Dialog
-            //hideBackdrop // Disable the backdrop color/image
             disableAutoFocus // Let the user focus on elements outside the dialog
             style={{ position: "absolute", width: "100%", height: "100%" }} // This was the key point, reset the position of the dialog, so the user can interact with other elements
             disableBackdropClick // Remove the backdrop click (just to be sure)
@@ -50,12 +49,11 @@ function Workouts({
             </Box>
           </Dialog>
 
-          <Grid container className={""} justify="center">
+          <Grid container spacing={1} className={""} justify="center">
             {data.Months[0].plan_for_each_week_in_the_month.days.map(
               (dayData, currentIndex) => {
-                console.log(currentIndex);
                 return (
-                  <Grid item>
+                  <Grid item key={currentIndex}>
                     <div
                       onClick={() => {
                         setCurrentWorkout(currentIndex);

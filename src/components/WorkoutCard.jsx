@@ -1,4 +1,11 @@
-import { Box, Card, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
 import React from "react";
 
 const bull = (
@@ -17,23 +24,45 @@ function WorkoutCard({ data, index }) {
       return arr.indexOf(item) === index;
     });
 
+  const [imgUrl, setImgUrl] = React.useState(null);
+
+  React.useEffect(() => {
+    var requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
+    fetch(
+      `https://api.unsplash.com/search/photos?query=` +
+        "gym workout" +
+        `&client_id=i_fBz-g6EkznTcLmSgnNH_eCmjuybDK1SmwWqTDpfKk`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then(({ results }) => {
+        console.log(results);
+        setImgUrl(results[0].urls["small"]);
+      })
+      .catch((error) => console.log("error", error));
+  }, []);
   return (
-    <Card variant="outlined" sx={{ padding: 2 }}>
-      <Typography variant="h3" component="div">
-        Day {index + 1}
-      </Typography>
-
-      <Typography variant="h5" component="div">
-        Target Muscle groups
-      </Typography>
-
-      <Typography variant="h6" component="div">
+    <Card>
+      <CardMedia sx={{ height: 140 }} image={imgUrl} title="green iguana" />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          Workout {index + 1}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Target Muscle groups
+        </Typography>
+      </CardContent>
+      <CardActions>
         {muscle_groups.map((muscle_group) => (
           <span>
             {muscle_group} {bull}
           </span>
         ))}
-      </Typography>
+      </CardActions>
     </Card>
   );
 }

@@ -100,8 +100,9 @@ function Navbar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
+              {pages.map((page, index) => (
                 <NavLink
+                  key={index}
                   to={page.link}
                   className={({ isActive, isPending }) =>
                     isPending ? "pending" : isActive ? "active" : ""
@@ -145,8 +146,9 @@ function Navbar() {
             />
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {pages.map((page, index) => (
               <NavLink
+                key={index}
                 to={page.link}
                 className={({ isActive, isPending }) =>
                   isPending ? "pending" : isActive ? "active" : ""
