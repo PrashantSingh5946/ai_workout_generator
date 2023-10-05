@@ -3,6 +3,7 @@ import WeekCard from "../components/WeekCard";
 import { Box, Card, Grid, Modal, Typography } from "@mui/material";
 import WorkoutCard from "../components/WorkoutCard";
 import Workout from "../components/Workout";
+import { connect } from "react-redux";
 
 let data = {
   Workout_Plan_Description:
@@ -263,8 +264,7 @@ let data = {
   ],
 };
 
-function Workouts() {
-  const [isOpenWorkoutModal, setIsOpenWorkoutModal] = useState(false);
+function Workouts({ isModalOpen, openModal, closeModal }) {
   const [currentWorkout, setCurrentWorkout] = useState(null);
 
   const handleClose = () => {};
@@ -272,11 +272,9 @@ function Workouts() {
   return (
     <div>
       <Modal
-        open={isOpenWorkoutModal}
+        open={isModalOpen}
         onClose={handleClose}
-        onClick={() => {
-          setIsOpenWorkoutModal(false);
-        }}
+        onClick={() => closeModal()}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -300,7 +298,7 @@ function Workouts() {
                 <div
                   onClick={() => {
                     setCurrentWorkout(currentIndex);
-                    setIsOpenWorkoutModal(true);
+                    openModal();
                   }}
                 >
                   <Box sx={{ margin: 3 }}>
@@ -320,4 +318,15 @@ function Workouts() {
   );
 }
 
-export default Workouts;
+const mapStateToProps = (state) => ({
+  isModalOpen: state.workout.isModalOpen,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    openModal: () => dispatch({ type: "OPEN_WORKOUT_MODAL" }),
+    closeModal: () => dispatch({ type: "CLOSE_WORKOUT_MODAL" }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Workouts);

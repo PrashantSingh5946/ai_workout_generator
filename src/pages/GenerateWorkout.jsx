@@ -7,29 +7,23 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Autocomplete from "@mui/material/Autocomplete";
+import { connect } from "react-redux";
+import muscle_groups from "../utils/muscleGroups";
 
-const muscle_groups = [
-  { name: "chest", scientific_name: "Pectoralis Major" },
-  { name: "back", scientific_name: "Latissimus Dorsi, Trapezius, Rhomboids" },
-  { name: "shoulders", scientific_name: "Deltoids" },
-  { name: "biceps", scientific_name: "Biceps Brachii" },
-  { name: "triceps", scientific_name: "Triceps Brachii" },
-  { name: "abdominals", scientific_name: "Rectus Abdominis, Obliques" },
-  { name: "lowerBack", scientific_name: "Erector Spinae" },
-  { name: "quadriceps", scientific_name: "Quadriceps" },
-  { name: "hamstrings", scientific_name: "Hamstrings" },
-  { name: "glutes", scientific_name: "Gluteus Maximus" },
-  { name: "calves", scientific_name: "Gastrocnemius, Soleus" },
-];
+//Actions
 
-function GenerateWorkout() {
+import { fetchDataRequest } from "../redux/reducers/workout/workoutActions";
+
+function GenerateWorkout(props) {
   const [data, setData] = useState([]);
+  const fetchData = () => {
+    return async (dispatch) => {
+      dispatch(fetchDataRequest());
 
-  async function fetchData() {
-    try {
-      let data = null;
-      let TOKEN = env.OPEN_AI_TOKEN;
-      let topic = `give me a weekwise fitness plan  with exercises for the following parameters
+      try {
+        let data = null;
+        let TOKEN = env.OPEN_AI_TOKEN;
+        let topic = `give me a weekwise fitness plan  with exercises for the following parameters
 {
   "age": 19,
   "weight": "70kg",
@@ -39,7 +33,7 @@ function GenerateWorkout() {
   "gender": "female",
   "muscle_groups_to_target": ["abs","legs","back"],
   "plan_duration_length_in_months": 1
-} 
+}
 
 in the form of a json schema like this
  {
@@ -57,58 +51,58 @@ in the form of a json schema like this
                     "reps":"",
                   "sets":"",
                   "target_muscle":""
-                    
+
                   }
                 ],
                 "duration": 30
               }
-              
-              
+
             ]
           }
-        
+
       }
     ]
 }`;
 
-      let request = fetch(
-        "https://api.openai.com/v1/engines/text-davinci-003/completions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + TOKEN,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt: topic,
-            max_tokens: 3500,
-            n: 1,
-            stop: null,
-            temperature: 0,
-            top_p: 1,
-            frequency_penalty: 0,
-            presence_penalty: 0,
-          }),
-        }
-      );
+        let request = fetch(
+          "https://api.openai.com/v1/engines/text-davinci-003/completions",
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + TOKEN,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              prompt: topic,
+              max_tokens: 3500,
+              n: 1,
+              stop: null,
+              temperature: 0,
+              top_p: 1,
+              frequency_penalty: 0,
+              presence_penalty: 0,
+            }),
+          }
+        );
 
-      let response = await request;
+        let response = await request;
 
-      console.log(response);
+        console.log(response);
 
-      data = await response.json();
+        data = await response.json();
 
-      response = JSON.parse(data.choices[0].text);
+        response = JSON.parse(data.choices[0].text);
 
-      console.log(response);
+        console.log(response);
 
-      let months = response["Months"];
+        let months = response["Months"];
 
-      setData(months);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+        console.log("Outputted data", data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
 
   const ageRef = useRef();
   const heightRef = useRef();
@@ -250,4 +244,15 @@ in the form of a json schema like this
   );
 }
 
-export default GenerateWorkout;
+const mapStateToProps = (state) => ({
+  //isModalOpen: state.workout.isModalOpen,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // openModal: () => dispatch({ type: "OPEN_WORKOUT_MODAL" }),
+    // closeModal: () => dispatch({ type: "CLOSE_WORKOUT_MODAL" }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(GenerateWorkout);
