@@ -3,7 +3,8 @@
   align-items: center;
   justify-content: center;
   width: 100vw;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   height: max-content;
   background: #d3cce3; /* fallback for old browsers */
   background: -webkit-linear-gradient(
@@ -25,11 +26,11 @@ a {
 }
 
 button {
-  color: #524b4b;
+  color: #524b4b !important;
 }
 
 .active button {
-  color: red;
+  color: red !important;
   font-weight: 600;
   text-decoration: none;
 }

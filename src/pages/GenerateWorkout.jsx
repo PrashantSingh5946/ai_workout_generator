@@ -275,7 +275,11 @@ in the form of a json schema like this
               </form>
             </Box>
 
-            <Button variant="contained" onClick={submitData}>
+            <Button
+              sx={{ background: "white", color: "white" }}
+              variant="contained"
+              onClick={submitData}
+            >
               Generate Workout
             </Button>
           </Card>
