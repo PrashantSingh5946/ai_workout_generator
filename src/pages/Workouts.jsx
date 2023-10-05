@@ -1,23 +1,41 @@
 import React, { useState } from "react";
 import WeekCard from "../components/WeekCard";
-import { Box, Card, Grid, Modal, Typography } from "@mui/material";
+import { Box, Card, Dialog, Grid, Modal, Typography } from "@mui/material";
 import WorkoutCard from "../components/WorkoutCard";
 import Workout from "../components/Workout";
 import { connect } from "react-redux";
 
-function Workouts({ isModalOpen, data, openModal, closeModal }) {
-  const [currentWorkout, setCurrentWorkout] = useState(null);
+import {
+  openWorkoutModal,
+  closeWorkoutModal,
+  setCurrentWorkoutIndex,
+} from "../redux/reducers/workout/workoutActions";
 
-  const handleClose = () => {};
+function Workouts({
+  isModalOpen,
+  data,
+  currentWorkout,
+  openModal,
+  closeModal,
+  setCurrentWorkout,
+}) {
+  const handleClose = (e) => {
+    console.log("Workout modal closed");
+    e.stopPropagation();
+    closeModal();
+  };
 
   return (
     <>
       {data && (
         <div>
-          <Modal
+          <Dialog
+            //hideBackdrop // Disable the backdrop color/image
+            disableAutoFocus // Let the user focus on elements outside the dialog
+            style={{ position: "absolute", width: "100%", height: "100%" }} // This was the key point, reset the position of the dialog, so the user can interact with other elements
+            disableBackdropClick // Remove the backdrop click (just to be sure)
             open={isModalOpen}
             onClose={handleClose}
-            onClick={() => closeModal()}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
@@ -30,7 +48,7 @@ function Workouts({ isModalOpen, data, openModal, closeModal }) {
                 }
               />
             </Box>
-          </Modal>
+          </Dialog>
 
           <Grid container className={""} justify="center">
             {data.Months[0].plan_for_each_week_in_the_month.days.map(
@@ -67,12 +85,14 @@ function Workouts({ isModalOpen, data, openModal, closeModal }) {
 const mapStateToProps = (state) => ({
   isModalOpen: state.workout.isModalOpen,
   data: state.workout.data,
+  currentWorkout: state.workout.currentWorkoutIndex,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    openModal: () => dispatch({ type: "OPEN_WORKOUT_MODAL" }),
-    closeModal: () => dispatch({ type: "CLOSE_WORKOUT_MODAL" }),
+    openModal: () => dispatch(openWorkoutModal()),
+    closeModal: () => dispatch(closeWorkoutModal()),
+    setCurrentWorkout: (index) => dispatch(setCurrentWorkoutIndex(index)),
   };
 };
 

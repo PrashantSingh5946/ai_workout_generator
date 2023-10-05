@@ -1,12 +1,12 @@
-import env from "react-dotenv";
-
-import { openWorkoutModal, closeWorkoutModal } from "./workoutActions";
 import {
   CLOSE_WORKOUT_MODAL,
   OPEN_WORKOUT_MODAL,
   FETCH_DATA_FAILURE,
   FETCH_DATA_REQUEST,
   FETCH_DATA_SUCCESS,
+  OPEN_WORKOUT_LIST_MODAL,
+  CLOSE_WORKOUT_LIST_MODAL,
+  SET_CURRENT_WORKOUT_INDEX,
 } from "./workoutActionTypes";
 
 import deepClone from "../../../utils/deepClone";
@@ -17,6 +17,8 @@ const initialState = {
   data: null,
   loading: false,
   error: null,
+  isWorkoutListModalOpen: false,
+  currentWorkoutIndex: 0,
 };
 
 const workoutReducer = (state = initialState, action) => {
@@ -54,6 +56,23 @@ const workoutReducer = (state = initialState, action) => {
         data: null,
         loading: false,
         error: action.payload,
+      };
+    case OPEN_WORKOUT_LIST_MODAL:
+      return {
+        ...state,
+
+        isWorkoutListModalOpen: true,
+      };
+    case CLOSE_WORKOUT_LIST_MODAL:
+      return {
+        ...state,
+
+        isWorkoutListModalOpen: false,
+      };
+    case SET_CURRENT_WORKOUT_INDEX:
+      return {
+        ...state,
+        currentWorkoutIndex: action.payload,
       };
     default:
       return state;

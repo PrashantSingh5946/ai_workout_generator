@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Button, TextField, Box } from "@mui/material";
+import { Card, Button, TextField, Box, Modal, Dialog } from "@mui/material";
 import env from "react-dotenv";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -16,14 +16,20 @@ import {
   fetchDataRequest,
   fetchDataSuccess,
   fetchDataFailure,
+  openWorkoutListModal,
+  closeWorkoutListModal,
 } from "../redux/reducers/workout/workoutActions";
 import Spinner from "../components/Spinner";
+import Workouts from "./Workouts";
 
 function GenerateWorkout({
   isLoading,
+  isWorkoutListModalOpen,
   startRequest,
   sendRequestFailureStatus,
   sendRequestSuccessStatus,
+  showWorkoutListModal,
+  hideWorkoutListModal,
 }) {
   //Local State data
   const [selectedMuscleGroups, setSelectedMuscleGroups] =
@@ -46,13 +52,10 @@ function GenerateWorkout({
     let weight = weightRef.current.value;
     let workoutDuration = workoutDurationRef.current.value;
     let numberOfDaysToWorkOut = workoutsNoRef.current.value;
-    let muscle_groups_to_target_throughout_the_week = selectedMuscleGroups;
+    let muscle_groups = selectedMuscleGroups;
 
     //Flatten the array
-    muscle_groups_to_target_throughout_the_week =
-      muscle_groups_to_target_throughout_the_week.map(
-        (muscleGroup) => muscleGroup.name
-      );
+    muscle_groups = muscle_groups.map((muscleGroup) => muscleGroup.name);
 
     fetchData({
       age,
@@ -61,7 +64,7 @@ function GenerateWorkout({
       workoutDuration,
       numberOfDaysToWorkOut,
       gender,
-      muscle_groups_to_target_throughout_the_week,
+      muscle_groups,
     });
   };
 
@@ -98,7 +101,7 @@ in the form of a json schema like this
           }
 
       }
-    ]}`;
+    ]}. Make sure to split the muscle groups throughout the week`;
 
       let request = fetch(
         "https://api.openai.com/v1/engines/text-davinci-003/completions",
@@ -127,6 +130,7 @@ in the form of a json schema like this
       console.log("Outputted data", data);
       response = JSON.parse(data.choices[0].text);
       sendRequestSuccessStatus(response);
+      showWorkoutListModal();
     } catch (error) {
       console.log(error);
       sendRequestFailureStatus(error);
@@ -138,6 +142,24 @@ in the form of a json schema like this
       {isLoading && <Spinner />}
       {!isLoading && (
         <div>
+          {/* Modal to show the loaded workout */}
+
+          <Dialog
+            //hideBackdrop // Disable the backdrop color/image
+            disableAutoFocus // Let the user focus on elements outside the dialog
+            style={{ position: "absolute", width: "100%", height: "100%" }}
+            disableBackdropClick // Remove the backdrop click (just to be sure)
+            open={isWorkoutListModalOpen}
+            onClose={(e) => {
+              e.stopPropagation();
+              hideWorkoutListModal();
+            }}
+          >
+            <Box>
+              <Workouts />
+            </Box>
+          </Dialog>
+
           {/* Form */}
 
           <Card style={{ padding: "15px" }}>
@@ -265,7 +287,7 @@ in the form of a json schema like this
 }
 
 const mapStateToProps = (state) => ({
-  //isModalOpen: state.workout.isModalOpen,
+  isWorkoutListModalOpen: state.workout.isWorkoutListModalOpen,
   isLoading: state.workout.loading,
 });
 
@@ -274,6 +296,8 @@ const mapDispatchToProps = (dispatch) => {
     startRequest: (payload) => dispatch(fetchDataRequest(payload)),
     sendRequestSuccessStatus: (data) => dispatch(fetchDataSuccess(data)),
     sendRequestFailureStatus: (error) => dispatch(fetchDataFailure(error)),
+    showWorkoutListModal: () => dispatch(openWorkoutListModal()),
+    hideWorkoutListModal: () => dispatch(closeWorkoutListModal()),
   };
 };
 
