@@ -72,6 +72,7 @@ function GenerateWorkout({
     try {
       startRequest({ age: 13 });
       let TOKEN = env.OPEN_AI_TOKEN;
+
       let topic = `give me a weekwise fitness plan  with exercises for the following parameters
 ${JSON.stringify(formData)}
 
@@ -124,10 +125,9 @@ in the form of a json schema like this
         }
       );
 
-      console.log("Fetching request");
       let response = await request;
       let data = await response.json();
-      console.log("Outputted data", data);
+
       response = JSON.parse(data.choices[0].text);
       sendRequestSuccessStatus(response);
       showWorkoutListModal();
@@ -145,7 +145,6 @@ in the form of a json schema like this
           {/* Modal to show the loaded workout */}
 
           <Dialog
-            //hideBackdrop // Disable the backdrop color/image
             disableAutoFocus // Let the user focus on elements outside the dialog
             style={{ position: "absolute", width: "100%", height: "100%" }}
             open={isWorkoutListModalOpen}
