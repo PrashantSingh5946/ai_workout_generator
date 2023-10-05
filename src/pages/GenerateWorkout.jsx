@@ -199,7 +199,7 @@ in the form of a json schema like this
                     required
                     id="outlined-required"
                     label="Weight"
-                    defaultValue="23"
+                    defaultValue="65"
                     style={{ margin: "20px" }}
                     inputRef={weightRef}
                   />
