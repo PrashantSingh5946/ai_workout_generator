@@ -7,12 +7,9 @@ function Workout({ data }) {
   return (
     <Grid
       container
-      className={""}
+      sx={{ background: "#eee" }}
       spacing={2}
       justifyContent={"center"}
-      justifyItems={"center"}
-      padding={1}
-      sx={{ background: "#eee" }}
     >
       {data?.excercises?.map((excercise, index) => (
         <Grid item key={index}>

@@ -41,8 +41,8 @@ export default function ExcerciseCard({ data }) {
       .catch((error) => console.log("error", error));
   }, []);
   return (
-    <Card sx={{ minWidth: 200 }}>
-      <CardMedia sx={{ height: 140 }} image={imgUrl} title="green iguana" />
+    <Card>
+      <CardMedia sx={{ height: 140 }} image={imgUrl} title="Workout image" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {data.name}

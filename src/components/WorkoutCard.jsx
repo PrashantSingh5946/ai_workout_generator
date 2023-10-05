@@ -47,7 +47,7 @@ function WorkoutCard({ data, index }) {
   }, []);
   return (
     <Card>
-      <CardMedia sx={{ height: 140 }} image={imgUrl} title="green iguana" />
+      <CardMedia sx={{ height: 140 }} image={imgUrl} title="Workout image" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           Workout {index + 1}
