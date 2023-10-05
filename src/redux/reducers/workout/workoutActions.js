@@ -7,6 +7,7 @@ import {
   OPEN_WORKOUT_LIST_MODAL,
   CLOSE_WORKOUT_LIST_MODAL,
   SET_CURRENT_WORKOUT_INDEX,
+  CLOSE_ERROR_MODAL,
 } from "./workoutActionTypes";
 
 export const fetchDataRequest = (data) => ({
@@ -43,4 +44,8 @@ export const closeWorkoutListModal = () => ({
 export const setCurrentWorkoutIndex = (index) => ({
   type: SET_CURRENT_WORKOUT_INDEX,
   payload: index,
+});
+
+export const closeErrorModal = () => ({
+  type: CLOSE_ERROR_MODAL,
 });

@@ -17,8 +17,6 @@ const bull = (
 );
 
 export default function ExcerciseCard({ data }) {
-  console.log(data);
-
   const [imgUrl, setImgUrl] = React.useState(null);
 
   React.useEffect(() => {

@@ -7,9 +7,11 @@ import {
   OPEN_WORKOUT_LIST_MODAL,
   CLOSE_WORKOUT_LIST_MODAL,
   SET_CURRENT_WORKOUT_INDEX,
+  CLOSE_ERROR_MODAL,
 } from "./workoutActionTypes";
 
 import deepClone from "../../../utils/deepClone";
+
 //initial state
 const initialState = {
   isModalOpen: false,
@@ -19,6 +21,7 @@ const initialState = {
   error: null,
   isWorkoutListModalOpen: false,
   currentWorkoutIndex: 0,
+  isErrorModalOpen: false,
 };
 
 const workoutReducer = (state = initialState, action) => {
@@ -56,6 +59,7 @@ const workoutReducer = (state = initialState, action) => {
         data: null,
         loading: false,
         error: action.payload,
+        isErrorModalOpen: true,
       };
     case OPEN_WORKOUT_LIST_MODAL:
       return {
@@ -73,6 +77,11 @@ const workoutReducer = (state = initialState, action) => {
       return {
         ...state,
         currentWorkoutIndex: action.payload,
+      };
+    case CLOSE_ERROR_MODAL:
+      return {
+        ...state,
+        isErrorModalOpen: false,
       };
     default:
       return state;

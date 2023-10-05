@@ -18,6 +18,7 @@ import {
   fetchDataFailure,
   openWorkoutListModal,
   closeWorkoutListModal,
+  closeErrorModal,
 } from "../redux/reducers/workout/workoutActions";
 import Spinner from "../components/Spinner";
 import Workouts from "./Workouts";
@@ -30,6 +31,8 @@ function GenerateWorkout({
   sendRequestSuccessStatus,
   showWorkoutListModal,
   hideWorkoutListModal,
+  error,
+  closeErrorModal,
 }) {
   //Local State data
   const [selectedMuscleGroups, setSelectedMuscleGroups] =
@@ -142,6 +145,23 @@ in the form of a json schema like this
       {isLoading && <Spinner />}
       {!isLoading && (
         <div>
+          {/* Error Dialog */}
+
+          <Dialog
+            disableAutoFocus
+            style={{ position: "absolute", width: "100%", height: "100%" }}
+            open={error != null}
+            onClose={(e) => {
+              closeErrorModal();
+            }}
+          >
+            <Box>
+              <Card sx={{ padding: "40px" }}>
+                Uh Oh! An unexpected error occurred
+              </Card>
+            </Box>
+          </Dialog>
+
           {/* Modal to show the loaded workout */}
 
           <Dialog
@@ -291,6 +311,7 @@ in the form of a json schema like this
 const mapStateToProps = (state) => ({
   isWorkoutListModalOpen: state.workout.isWorkoutListModalOpen,
   isLoading: state.workout.loading,
+  error: state.workout.error,
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -300,6 +321,7 @@ const mapDispatchToProps = (dispatch) => {
     sendRequestFailureStatus: (error) => dispatch(fetchDataFailure(error)),
     showWorkoutListModal: () => dispatch(openWorkoutListModal()),
     hideWorkoutListModal: () => dispatch(closeWorkoutListModal()),
+    closeErrorModal: () => dispatch(closeErrorModal()),
   };
 };
 
